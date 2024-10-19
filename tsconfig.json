@@ -1,0 +1,48 @@
+{
+  "compilerOptions": {
+    /* Language and Environment */
+    "target": "es2016", /* Set the JavaScript language version for emitted JavaScript */
+    "module": "commonjs", /* Specify what module code is generated. */
+    "esModuleInterop": true, /* Emit additional JavaScript to ease support for importing CommonJS modules. */
+    "forceConsistentCasingInFileNames": true, /* Ensure that casing is correct in imports. */
+    "strict": true, /* Enable all strict type-checking options. */
+    "skipLibCheck": true, /* Skip type checking all .d.ts files. *//* JSX Support */
+    "jsx": "preserve", /* Habilita el soporte para JSX en proyectos React *//* Base URL and Paths */
+    "baseUrl": ".", /* Base URL para las rutas relativas */
+    "paths": {
+      "@/*": [
+        "src/*"
+      ], /* Alias para el directorio `src` */
+      "@/components/*": [
+        "src/components/*"
+      ], /* Alias para la carpeta components */
+      "@/libs/*": [
+        "src/libs/*"
+      ] /* Alias para la carpeta libs */
+    },
+    /* Module resolution */
+    "moduleResolution": "node", /* Resolve modules as Node.js does */
+    "resolveJsonModule": true, /* Enable importing .json files */
+    "isolatedModules": true /* Asegura que cada archivo sea tratado de manera independiente */,
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
+    "allowJs": true,
+    "noEmit": true,
+    "incremental": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ]
+  },
+  "include": [
+    "src/**/*" /* Incluye todos los archivos TypeScript y TSX en `src` */,
+    ".next/types/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules" /* Excluye la carpeta `node_modules` */
+  ]
+}

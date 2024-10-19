@@ -1,43 +1,61 @@
 "use client";
-import { useForm } from "react-hook-form";
+import { useForm, SubmitHandler } from "react-hook-form";
 import { useRouter } from "next/navigation";
+
+interface RegisterFormData {
+  username: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+  role: "DOCTOR" | "CLIENT" | "ADMIN"; // Limita el tipo a las opciones de roles
+}
 
 function RegisterPage() {
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm();
+  } = useForm<RegisterFormData>();
+
   const router = useRouter();
 
-  const onSubmit = handleSubmit(async (data) => {
+  const onSubmit: SubmitHandler<RegisterFormData> = async (data) => {
+    // Validación de contraseñas coincidentes
     if (data.password !== data.confirmPassword) {
       return alert("Passwords do not match");
     }
 
-    const res = await fetch("/api/auth/register", {
-      method: "POST",
-      body: JSON.stringify({
-        username: data.username,
-        email: data.email,
-        password: data.password,
-        role: data.role,
-      }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    try {
+      const res = await fetch("/api/auth/register", {
+        method: "POST",
+        body: JSON.stringify({
+          username: data.username,
+          email: data.email,
+          password: data.password,
+          role: data.role,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
-    if (res.ok) {
+      // Manejo de error si el servidor responde con un error
+      if (!res.ok) {
+        const errorResponse = await res.json();
+        return alert(`Registration failed: ${errorResponse.message}`);
+      }
+
+      // Si el registro fue exitoso, redirige al login
       router.push("/auth/login");
+    } catch (error) {
+      alert("An error occurred while registering. Please try again.");
+      console.error("Error during registration:", error);
     }
-  });
-
-  console.log(errors);
+  };
 
   return (
     <div className="h-[calc(100vh-7rem)] flex justify-center items-center">
-      <form onSubmit={onSubmit} className="w-1/4">
+      <form onSubmit={handleSubmit(onSubmit)} className="w-1/4">
         <h1 className="text-slate-200 font-bold text-4xl mb-4">Register</h1>
 
         <label htmlFor="username" className="text-slate-500 mb-2 block text-sm">
@@ -54,11 +72,8 @@ function RegisterPage() {
           className="p-3 rounded block mb-2 bg-slate-900 text-slate-300 w-full"
           placeholder="nombre de usuario"
         />
-
         {errors.username && (
-          <span className="text-red-500 text-xs">
-            {errors.username.message}
-          </span>
+          <span className="text-red-500 text-xs">{errors.username.message}</span>
         )}
 
         <label htmlFor="email" className="text-slate-500 mb-2 block text-sm">
@@ -89,14 +104,16 @@ function RegisterPage() {
               value: true,
               message: "Password is required",
             },
+            minLength: {
+              value: 6,
+              message: "Password must be at least 6 characters long",
+            },
           })}
           className="p-3 rounded block mb-2 bg-slate-900 text-slate-300 w-full"
           placeholder="********"
         />
         {errors.password && (
-          <span className="text-red-500 text-sm">
-            {errors.password.message}
-          </span>
+          <span className="text-red-500 text-sm">{errors.password.message}</span>
         )}
 
         <label
@@ -121,8 +138,8 @@ function RegisterPage() {
             {errors.confirmPassword.message}
           </span>
         )}
-{/* Campo de selección para el rol */}
-<label htmlFor="role" className="text-slate-500 mb-2 block text-sm">
+
+        <label htmlFor="role" className="text-slate-500 mb-2 block text-sm">
           Role:
         </label>
         <select
@@ -142,8 +159,6 @@ function RegisterPage() {
           <span className="text-red-500 text-sm">{errors.role.message}</span>
         )}
 
-
-
         <button className="w-full bg-blue-500 text-white p-3 rounded-lg mt-2">
           Register
         </button>
@@ -151,4 +166,6 @@ function RegisterPage() {
     </div>
   );
 }
+
 export default RegisterPage;
+

@@ -1,9 +1,10 @@
 import Link from "next/link";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { Session } from "next-auth";
 
-async function Navbar() {
-  const session = await getServerSession(authOptions);
+async function Navbar(): Promise<JSX.Element> {
+  const session: Session | null = await getServerSession(authOptions);
   console.log(session);
 
   return (

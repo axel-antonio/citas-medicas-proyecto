@@ -1,10 +1,18 @@
 import { NextResponse } from "next/server";
 import bcrypt from "bcrypt";
 import db from "@/libs/db";
+import { Role } from "@prisma/client"; // Importa el enum Role de Prisma
 
-export async function POST(request) {
+interface RequestData {
+  email: string;
+  username: string;
+  password: string;
+  role: Role; // Ajusta el tipo de role para usar el enum de Prisma
+}
+
+export async function POST(request: Request): Promise<NextResponse> {
   try {
-    const data = await request.json();
+    const data: RequestData = await request.json();
 
     const userFound = await db.user.findUnique({
       where: {
@@ -32,7 +40,7 @@ export async function POST(request) {
     if (usernameFound) {
       return NextResponse.json(
         {
-          message: "username already exists",
+          message: "Username already exists",
         },
         {
           status: 400,
@@ -46,14 +54,15 @@ export async function POST(request) {
         username: data.username,
         email: data.email,
         password: hashedPassword,
-        role: data.role, // Asigna el rol aquí
+        role: data.role as Role, // Asegúrate de tipar correctamente el rol como Role
       },
     });
 
+    // Excluye la contraseña del objeto de respuesta
     const { password: _, ...user } = newUser;
 
     return NextResponse.json(user);
-  } catch (error) {
+  } catch (error: any) {
     return NextResponse.json(
       {
         message: error.message,
