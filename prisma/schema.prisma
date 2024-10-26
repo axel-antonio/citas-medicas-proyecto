@@ -9,17 +9,119 @@ datasource db {
 }
 
 model User {
+  id               Int              @id @default(autoincrement())
+  email            String           @unique
+  username         String           @unique
+  password         String
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+  role             Role
+  admin            Admin?
+  appointments     Appointment[]
+  clients          Client[]         @relation("AssignedDoctor")
+  client           Client?          @relation("ClientUser")
+  medicalHistories MedicalHistory[]
+  notifications    Notification[]
+  assignedPatients Patient[]        @relation("AssignedDoctor")
+  prescriptions    Prescription[]
+  tasks            Task[]
+}
+
+model Appointment {
+  id        Int               @id @default(autoincrement())
+  userId    Int
+  doctorId  Int
+  date      DateTime
+  time      String
+  status    AppointmentStatus
+  createdAt DateTime          @default(now())
+  updatedAt DateTime          @updatedAt
+  doctor    User              @relation(fields: [doctorId], references: [id])
+  user      Patient           @relation(fields: [userId], references: [id])
+}
+
+model Patient {
+  id               Int              @id @default(autoincrement())
+  name             String
+  email            String           @unique
+  phone            String?
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+  doctorId         Int?
+  appointments     Appointment[]
+  medicalHistories MedicalHistory[]
+  assignedDoctor   User?            @relation("AssignedDoctor", fields: [doctorId], references: [id])
+  prescriptions    Prescription[]
+}
+
+model Client {
+  id               Int      @id @default(autoincrement())
+  userId           Int      @unique
+  assignedDoctorId Int?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  assignedDoctor   User?    @relation("AssignedDoctor", fields: [assignedDoctorId], references: [id])
+  user             User     @relation("ClientUser", fields: [userId], references: [id])
+}
+
+model Admin {
   id        Int      @id @default(autoincrement())
-  email     String   @unique
-  username  String   @unique
-  password  String
+  userId    Int      @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  role      Role
+  user      User     @relation(fields: [userId], references: [id])
+}
+
+model MedicalHistory {
+  id        Int      @id @default(autoincrement())
+  patientId Int
+  doctorId  Int
+  notes     String
+  date      DateTime @default(now())
+  doctor    User     @relation(fields: [doctorId], references: [id])
+  patient   Patient  @relation(fields: [patientId], references: [id])
+}
+
+model Prescription {
+  id         Int      @id @default(autoincrement())
+  patientId  Int
+  doctorId   Int
+  medication String
+  dosage     String
+  date       DateTime @default(now())
+  doctor     User     @relation(fields: [doctorId], references: [id])
+  patient    Patient  @relation(fields: [patientId], references: [id])
+}
+
+model Task {
+  id          Int       @id @default(autoincrement())
+  doctorId    Int
+  description String
+  completed   Boolean   @default(false)
+  dueDate     DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  doctor      User      @relation(fields: [doctorId], references: [id])
+}
+
+model Notification {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  message   String
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
 }
 
 enum Role {
   DOCTOR
   CLIENT
   ADMIN
+}
+
+enum AppointmentStatus {
+  PENDING
+  CONFIRMED
+  COMPLETED
+  CANCELED
 }
