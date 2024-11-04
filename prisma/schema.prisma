@@ -1,0 +1,145 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("POSTGRES_PRISMA_URL")
+  directUrl = env("POSTGRES_URL_NON_POOLING")
+}
+
+// Modelo para usuarios (doctores, clientes y administradores)
+model User {
+  id                   Int              @id @default(autoincrement())
+  email                String           @unique
+  username             String           @unique
+  password             String
+  createdAt            DateTime         @default(now())
+  updatedAt            DateTime         @updatedAt
+  role                 Role
+  appointmentsAsDoctor Appointment[]    @relation("DoctorAppointments") // Relación como doctor
+  tasks                Task[] // Relación con tareas
+  notifications        Notification[] // Relación con notificaciones
+  medicalHistories     MedicalHistory[] // Historiales médicos
+  prescriptions        Prescription[] // Relación con recetas
+  clients              Client[]         @relation(name: "AssignedDoctor") // Relación con clientes (si es doctor)
+  assignedPatients     Patient[]        @relation(name: "AssignedDoctor") // Relación con pacientes asignados (si es doctor)
+  admin                Admin? // Relación con Admin (si es admin)
+  client               Client?          @relation(name: "ClientUser") // Relación con Client (si es cliente)
+}
+
+// Enum para roles de usuario
+enum Role {
+  DOCTOR
+  CLIENT
+  ADMIN
+}
+
+// Modelo para citas
+model Appointment {
+  id        Int               @id @default(autoincrement())
+  userId    Int // ID del usuario (paciente)
+  doctorId  Int // ID del doctor
+  date      DateTime // Fecha de la cita
+  time      String // Hora de la cita
+  status    AppointmentStatus // Estado de la cita
+  createdAt DateTime          @default(now()) // Fecha de creación
+  updatedAt DateTime          @updatedAt // Fecha de actualización
+
+  user   Patient @relation("PatientAppointments", fields: [userId], references: [id])
+  doctor User    @relation("DoctorAppointments", fields: [doctorId], references: [id])
+}
+
+// Enum para estados de citas
+enum AppointmentStatus {
+  PENDING
+  CONFIRMED
+  COMPLETED
+  CANCELED
+}
+
+// Modelo para pacientes
+model Patient {
+  id               Int              @id @default(autoincrement())
+  name             String
+  email            String           @unique
+  phone            String?
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+  appointments     Appointment[]    @relation("PatientAppointments") // Relación con citas
+  medicalHistories MedicalHistory[] // Relación con historiales médicos
+  prescriptions    Prescription[] // Relación con recetas
+  assignedDoctor   User?            @relation(name: "AssignedDoctor", fields: [doctorId], references: [id])
+  doctorId         Int?
+}
+
+// Modelo para clientes
+model Client {
+  id               Int      @id @default(autoincrement())
+  userId           Int      @unique // ID del usuario cliente debe ser único
+  assignedDoctorId Int? // ID del doctor asignado (opcional)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  user           User  @relation(name: "ClientUser", fields: [userId], references: [id])
+  assignedDoctor User? @relation(name: "AssignedDoctor", fields: [assignedDoctorId], references: [id])
+}
+
+// Modelo para administradores
+model Admin {
+  id        Int      @id @default(autoincrement())
+  userId    Int      @unique // ID del usuario administrador debe ser único
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id])
+}
+
+// Modelo para el historial médico
+model MedicalHistory {
+  id        Int      @id @default(autoincrement())
+  patientId Int
+  doctorId  Int
+  notes     String
+  date      DateTime @default(now())
+
+  patient Patient @relation(fields: [patientId], references: [id])
+  doctor  User    @relation(fields: [doctorId], references: [id])
+}
+
+// Modelo para recetas
+model Prescription {
+  id         Int      @id @default(autoincrement())
+  patientId  Int
+  doctorId   Int
+  medication String
+  dosage     String
+  date       DateTime @default(now())
+
+  patient Patient @relation(fields: [patientId], references: [id])
+  doctor  User    @relation(fields: [doctorId], references: [id])
+}
+
+// Modelo para tareas
+model Task {
+  id          Int       @id @default(autoincrement())
+  doctorId    Int
+  description String
+  completed   Boolean   @default(false)
+  dueDate     DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  doctor User @relation(fields: [doctorId], references: [id])
+}
+
+// Modelo para notificaciones
+model Notification {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  message   String
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+}
