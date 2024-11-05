@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 // src/app/api/admin/users/route.ts
 
 import { NextResponse } from 'next/server';
@@ -49,6 +50,8 @@ export async function DELETE(req: Request) {
     console.error('Error en la API de usuarios (DELETE):', error);
     return NextResponse.json({ message: 'Internal server error' }, { status: 500 });
 =======
+=======
+>>>>>>> 0f6e4af (apiclientes)
 import bcrypt from 'bcrypt';
 import { NextResponse } from 'next/server';
 import db from '@/libs/db';
@@ -104,6 +107,9 @@ export async function POST(req: Request) {
   } catch (error) {
     console.error('Error creating user:', error);
     return NextResponse.json({ message: 'Error creating user' }, { status: 500 });
+<<<<<<< HEAD
 >>>>>>> 27b90e5 (Configuracion de APIs)
+=======
+>>>>>>> 0f6e4af (apiclientes)
   }
 }

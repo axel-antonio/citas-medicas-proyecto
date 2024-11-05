@@ -1,9 +1,13 @@
 // src/app/api/admin/appointments/route.ts
 <<<<<<< HEAD
+<<<<<<< HEAD
 import { NextResponse } from 'next/server';
 =======
 import { NextRequest, NextResponse } from 'next/server';
 >>>>>>> 27b90e5 (Configuracion de APIs)
+=======
+import { NextRequest, NextResponse } from 'next/server';
+>>>>>>> 0f6e4af (apiclientes)
 import prisma from '@/libs/db';
 
 // Obtener todas las citas
@@ -19,8 +23,11 @@ export async function GET() {
   } catch (error) {
     console.error('Error en la API de citas (GET):', error);
 <<<<<<< HEAD
+<<<<<<< HEAD
     return NextResponse.json({ message: 'Internal server error' }, { status: 500 });
 =======
+=======
+>>>>>>> 0f6e4af (apiclientes)
     return NextResponse.json({ message: 'Error al obtener citas' }, { status: 500 });
   }
 }
@@ -48,7 +55,10 @@ export async function POST(req: NextRequest) {
   } catch (error) {
     console.error('Error en la API de citas (POST):', error);
     return NextResponse.json({ message: `Error al crear cita: ${error.message}` }, { status: 500 });
+<<<<<<< HEAD
 >>>>>>> 27b90e5 (Configuracion de APIs)
+=======
+>>>>>>> 0f6e4af (apiclientes)
   }
 }
 
@@ -69,10 +79,14 @@ export async function PUT(req: Request) {
   } catch (error) {
     console.error('Error en la API de citas (PUT):', error);
 <<<<<<< HEAD
+<<<<<<< HEAD
     return NextResponse.json({ message: 'Internal server error' }, { status: 500 });
 =======
     return NextResponse.json({ message: 'Error al actualizar cita' }, { status: 500 });
 >>>>>>> 27b90e5 (Configuracion de APIs)
+=======
+    return NextResponse.json({ message: 'Error al actualizar cita' }, { status: 500 });
+>>>>>>> 0f6e4af (apiclientes)
   }
 }
 
@@ -94,9 +108,13 @@ export async function DELETE(req: Request) {
   } catch (error) {
     console.error('Error en la API de citas (DELETE):', error);
 <<<<<<< HEAD
+<<<<<<< HEAD
     return NextResponse.json({ message: 'Internal server error' }, { status: 500 });
 =======
     return NextResponse.json({ message: 'Error al eliminar cita' }, { status: 500 });
 >>>>>>> 27b90e5 (Configuracion de APIs)
+=======
+    return NextResponse.json({ message: 'Error al eliminar cita' }, { status: 500 });
+>>>>>>> 0f6e4af (apiclientes)
   }
 }
