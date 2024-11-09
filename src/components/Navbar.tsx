@@ -11,38 +11,51 @@ function Navbar(): JSX.Element {
   }
 
   return (
-    <nav className="flex justify-between items-center bg-gray-950 text-white px-24 py-3">
-      <h1 className="text-xl font-bold">NextAuth</h1>
+    <nav className="flex justify-between items-center bg-gray-950 text-white px-12 py-4 shadow-lg">
+  <h1 className="text-2xl font-bold tracking-wide text-blue-400">NextAuth</h1>
 
-      <ul className="flex gap-x-2">
-        {!session ? (
-          <>
-            <li>
-              <Link href="/">Home</Link>
-            </li>
-            <li>
-              <button onClick={() => signIn()} className="text-white">
-                Login
-              </button>
-            </li>
-            <li>
-              <Link href="/auth/register">Register</Link>
-            </li>
-          </>
-        ) : (
-          <>
-            <li>
-              <Link href="/dashboard">Dashboard</Link>
-            </li>
-            <li>
-              <button onClick={() => signOut()} className="text-white">
-                Logout
-              </button>
-            </li>
-          </>
-        )}
-      </ul>
-    </nav>
+  <ul className="flex gap-4">
+    {!session ? (
+      <>
+        <li>
+          <Link href="/" className="text-white hover:text-blue-400 transition-colors">
+            Home
+          </Link>
+        </li>
+        <li>
+          <button onClick={() => signIn()} className="text-white hover:text-blue-400 transition-colors">
+            Login
+          </button>
+        </li>
+        <li>
+          <Link href="/auth/register" className="text-white hover:text-blue-400 transition-colors">
+            Register
+          </Link>
+        </li>
+      </>
+    ) : (
+      <>
+        <li>
+          <Link
+            href="/dashboard"
+            className="bg-green-500 text-white py-2 px-6 rounded-full hover:bg-green-600 transition-colors shadow-md"
+          >
+            Dashboard
+          </Link>
+        </li>
+        <li>
+          <button
+            onClick={() => signOut()}
+            className="bg-red-500 text-white py-2 px-6 rounded-full hover:bg-red-600 transition-colors shadow-md"
+          >
+            Logout
+          </button>
+        </li>
+      </>
+    )}
+  </ul>
+</nav>
+
   );
 }
 

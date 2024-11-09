@@ -7,7 +7,7 @@ interface RegisterFormData {
   email: string;
   password: string;
   confirmPassword: string;
-  role: "DOCTOR" | "CLIENT" | "ADMIN"; // Limita el tipo a las opciones de roles
+  role: "DOCTOR" | "ADMIN"; // Limita el tipo a las opciones de roles
 }
 
 function RegisterPage() {
@@ -152,7 +152,6 @@ function RegisterPage() {
           className="p-3 rounded block mb-2 bg-slate-900 text-slate-300 w-full"
         >
           <option value="DOCTOR">Doctor</option>
-          <option value="CLIENT">Client</option>
           <option value="ADMIN">Admin</option>
         </select>
         {errors.role && (

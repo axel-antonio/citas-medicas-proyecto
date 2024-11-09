@@ -34,16 +34,38 @@ const AppointmentList = () => {
   }, []);
 
   return (
-    <div>
-      <h3>Citas</h3>
-      <ul>
-        {appointments.map((appointment) => (
-          <li key={appointment.id}>
-            {appointment.user.username} con {appointment.doctor.username} - {appointment.date} a las {appointment.time} ({appointment.status})
-          </li>
-        ))}
-      </ul>
-    </div>
+    <div className="p-6 bg-white rounded-lg shadow-md">
+  <h3 className="text-2xl font-semibold mb-4 text-gray-800">Citas</h3>
+
+  {/* Lista de Citas */}
+  <ul className="space-y-4">
+    {appointments.map((appointment) => (
+      <li
+        key={appointment.id}
+        className="p-4 bg-gray-100 rounded-lg shadow flex justify-between items-center"
+      >
+        <div className="text-gray-700">
+          <p className="font-semibold">
+            {appointment.user.username} con {appointment.doctor.username}
+          </p>
+          <p className="text-sm text-gray-500">
+            {appointment.date} a las {appointment.time}
+          </p>
+        </div>
+        <span
+          className={`px-3 py-1 rounded-full text-sm font-medium ${
+            appointment.status === "CONFIRMED"
+              ? "bg-green-200 text-green-800"
+              : "bg-yellow-200 text-yellow-800"
+          }`}
+        >
+          {appointment.status}
+        </span>
+      </li>
+    ))}
+  </ul>
+</div>
+
   );
 };
 

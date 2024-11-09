@@ -42,7 +42,7 @@ function LoginPage() {
       // Redirige según el rol del usuario
       if (session?.user?.role === "DOCTOR") {
         router.push("/dashboard/doctor");
-      } else if (session?.user?.role === "CLIENT") {
+      } else if (session?.user?.role === "PACIENTE") {
         router.push("/dashboard/client");
       } else if (session?.user?.role === "ADMIN") {
         router.push("/dashboard/admin");

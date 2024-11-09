@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-
+import prisma from '@/libs/db'; 
 
 // Obtener todas las citas del doctor
 export async function GET(req: NextRequest) {

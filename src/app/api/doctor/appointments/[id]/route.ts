@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import prisma from '../../../lib/prisma';
+import prisma from "@/libs/db";
 
 // Obtener el detalle de una cita específica del doctor
 export async function GET(req: NextRequest, { params }) {
